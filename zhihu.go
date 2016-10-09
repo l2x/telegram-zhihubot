@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html"
 	"log"
 	"net/url"
 	"strings"
@@ -32,7 +33,10 @@ func search(msg string) (string, error) {
 			msg, cfg.Zhihu.Host, questionLink, title, summary, cfg.Zhihu.Host, answerLink)
 	})
 
-	return format(msg), nil
+	msg = format(msg)
+	msg = html.EscapeString(msg)
+
+	return msg, nil
 }
 
 var (
