@@ -1,12 +1,13 @@
 
-Bot:
-    Token:
-    Debug: true
+bot:
+    token:
+    debug: true
 
-HTTP:
-    Host:
-    PublicKey: ./public.pem
-    PrivateKey: ./private.key
+http:
+    host:
+    port: :8443
+    publickey: ./public.pem
+    privatekey: ./private.key
 
-Zhihu:
-    Host: https://www.zhihu.com
+zhihu:
+    host: https://www.zhihu.com

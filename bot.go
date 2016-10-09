@@ -18,14 +18,14 @@ func botRun() error {
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert(fmt.Sprintf("%s/%s", cfg.HTTP.Host, cfg.Bot.Token), cfg.HTTP.PublicKey))
+	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert(fmt.Sprintf("%s%s/%s", cfg.HTTP.Host, cfg.HTTP.Port, cfg.Bot.Token), cfg.HTTP.PublicKey))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	updates := bot.ListenForWebhook(fmt.Sprintf("/%s", bot.Token))
 	go func() {
-		if err := http.ListenAndServeTLS(cfg.HTTP.Host, cfg.HTTP.PublicKey, cfg.HTTP.PrivateKey, nil); err != nil {
+		if err := http.ListenAndServeTLS(cfg.HTTP.Port, cfg.HTTP.PublicKey, cfg.HTTP.PrivateKey, nil); err != nil {
 			panic(err)
 		}
 	}()
