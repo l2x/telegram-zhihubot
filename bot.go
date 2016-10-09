@@ -1,39 +1,44 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-var (
-	token = "266361856:AAGNWqZLAw2DVKUtEeTcHT_mZS2t1kkIV00"
-)
-
-func main() {
-	bot, err := tgbotapi.NewBotAPI(token)
+func botRun() error {
+	bot, err := tgbotapi.NewBotAPI(cfg.Bot.Token)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	bot.Debug = true
+	bot.Debug = cfg.Bot.Debug
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert("https://bot.l2x.me:8443/"+bot.Token, "./public.pem"))
+	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert(fmt.Sprintf("%s/%s", cfg.HTTP.Host, cfg.Bot.Token), cfg.HTTP.PublicKey))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	updates := bot.ListenForWebhook("/" + bot.Token)
+	updates := bot.ListenForWebhook(fmt.Sprintf("/%s", bot.Token))
 	go func() {
-		if err := http.ListenAndServeTLS(":8443", "public.pem", "private.key", nil); err != nil {
+		if err := http.ListenAndServeTLS(cfg.HTTP.Host, cfg.HTTP.PublicKey, cfg.HTTP.PrivateKey, nil); err != nil {
 			panic(err)
 		}
 	}()
 
 	for update := range updates {
-		log.Printf("%+v\n", update)
+		msgRouter(update)
 	}
+	return nil
+}
+
+func msgRouter(update tgbotapi.Update) error {
+	fmt.Println(update)
+	switch update.Message {
+	}
+	return nil
 }

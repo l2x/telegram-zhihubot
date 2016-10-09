@@ -1,0 +1,12 @@
+
+Bot:
+    Token:
+    Debug: true
+
+HTTP:
+    Host:
+    PublicKey: ./public.pem
+    PrivateKey: ./private.key
+
+Zhihu:
+    Host: https://www.zhihu.com
