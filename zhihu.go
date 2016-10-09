@@ -5,7 +5,6 @@ import (
 	"html"
 	"log"
 	"net/url"
-	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -30,28 +29,8 @@ func search(msg string) (string, error) {
 		answerLink, _ := s.Find(".entry-body .entry-content").Attr("data-entry-url")
 
 		msg = fmt.Sprintf(`%s<a href="%s/%s">%s</a><br>%s <a href="%s/%s">...显示全部</a><br><br>`,
-			msg, cfg.Zhihu.Host, questionLink, title, summary, cfg.Zhihu.Host, answerLink)
+			msg, cfg.Zhihu.Host, questionLink, title, html.EscapeString(summary), cfg.Zhihu.Host, answerLink)
 	})
 
-	msg = html.EscapeString(msg)
-	msg = format(msg)
-
 	return msg, nil
-}
-
-var (
-	Warp = `
-	`
-	ReplaceHTML = map[string]string{
-		"&lt;br&gt;": Warp,
-		"&lt;a&gt; ": "<a ",
-		"&lt;/a&gt;": "</a>",
-	}
-)
-
-func format(msg string) string {
-	for k, v := range ReplaceHTML {
-		msg = strings.Replace(msg, k, v, -1)
-	}
-	return msg
 }
