@@ -8,6 +8,8 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
+var bot *tgbotapi.BotAPI
+
 func botRun() error {
 	bot, err := tgbotapi.NewBotAPI(cfg.Bot.Token)
 	if err != nil {
@@ -37,8 +39,29 @@ func botRun() error {
 }
 
 func msgRouter(update tgbotapi.Update) error {
-	fmt.Println(update)
+	if update.Message == nil {
+		log.Println("message is nil", update)
+		return nil
+	}
+
 	switch update.Message {
 	}
+	return nil
+}
+
+func sendMsg(update tgbotapi.Update) error {
+	text, err := search(update.Message.Text)
+	if err != nil {
+		return err
+	}
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
+	msg.ParseMode = "HTML"
+	msg.DisableWebPagePreview = true
+	if _, err = bot.Send(msg); err != nil {
+		log.Println(err)
+		return err
+	}
+
 	return nil
 }
