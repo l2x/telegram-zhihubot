@@ -33,8 +33,8 @@ func search(msg string) (string, error) {
 			msg, cfg.Zhihu.Host, questionLink, title, summary, cfg.Zhihu.Host, answerLink)
 	})
 
-	msg = format(msg)
 	msg = html.EscapeString(msg)
+	msg = format(msg)
 
 	return msg, nil
 }
@@ -43,9 +43,7 @@ var (
 	Warp = `
 	`
 	ReplaceHTML = map[string]string{
-		"<p>":        "",
-		"</p>":       "",
-		"<br>":       Warp,
+		"&lt;br&gt;": Warp,
 		"&lt;a&gt;":  "<a>",
 		"&lt;/a&gt;": "</a>",
 	}
