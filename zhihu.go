@@ -43,9 +43,11 @@ var (
 	Warp = `
 	`
 	ReplaceHTML = map[string]string{
-		"<p>":  "",
-		"</p>": "",
-		"<br>": Warp,
+		"<p>":        "",
+		"</p>":       "",
+		"<br>":       Warp,
+		"&lt;a&gt;":  "<a>",
+		"&lt;/a&gt;": "</a>",
 	}
 )
 
