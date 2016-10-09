@@ -11,7 +11,8 @@ import (
 var bot *tgbotapi.BotAPI
 
 func botRun() error {
-	bot, err := tgbotapi.NewBotAPI(cfg.Bot.Token)
+	var err error
+	bot, err = tgbotapi.NewBotAPI(cfg.Bot.Token)
 	if err != nil {
 		return err
 	}
@@ -44,7 +45,8 @@ func msgRouter(update tgbotapi.Update) error {
 		return nil
 	}
 
-	switch update.Message {
+	sendMsg(update)
+	switch {
 	}
 	return nil
 }
