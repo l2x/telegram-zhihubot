@@ -5,6 +5,7 @@ import (
 	"html"
 	"log"
 	"net/url"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -32,5 +33,22 @@ func search(msg string) (string, error) {
 			msg, cfg.Zhihu.Host, questionLink, title, html.EscapeString(summary), cfg.Zhihu.Host, answerLink)
 	})
 
+	msg = format(msg)
 	return msg, nil
+}
+
+var (
+	Warp = `
+	`
+	ReplaceHTML = map[string]string{
+		"<br>":       Warp,
+		"&lt;br&gt;": Warp,
+	}
+)
+
+func format(msg string) string {
+	for k, v := range ReplaceHTML {
+		msg = strings.Replace(msg, k, v, -1)
+	}
+	return msg
 }
