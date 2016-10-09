@@ -44,7 +44,7 @@ var (
 	`
 	ReplaceHTML = map[string]string{
 		"&lt;br&gt;": Warp,
-		"&lt;a&gt;":  "<a>",
+		"&lt;a&gt; ": "<a ",
 		"&lt;/a&gt;": "</a>",
 	}
 )
