@@ -45,8 +45,9 @@ func msgRouter(update tgbotapi.Update) error {
 		return nil
 	}
 
-	sendMsg(update)
 	switch {
+	case update.Message.Chat.IsPrivate() || bot.IsMessageToMe(*update.Message):
+		sendMsg(update)
 	}
 	return nil
 }
