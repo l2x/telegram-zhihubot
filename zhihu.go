@@ -28,6 +28,9 @@ func search(msg string) (string, error) {
 
 		questionLink, _ := s.Find("a").Attr("href")
 		answerLink, _ := s.Find(".entry-body .entry-content").Attr("data-entry-url")
+		if title == "" {
+			return
+		}
 
 		msg = fmt.Sprintf(`%s<a href="%s/%s">%s</a><br>%s <a href="%s/%s">...显示全部</a><br><br>`,
 			msg, cfg.Zhihu.Host, questionLink, title, html.EscapeString(summary), cfg.Zhihu.Host, answerLink)
