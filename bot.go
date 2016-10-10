@@ -46,22 +46,31 @@ func msgRouter(update tgbotapi.Update) error {
 	}
 
 	switch {
+	case update.Message.IsCommand():
+		return isCommand(update)
 	case update.Message.Chat.IsPrivate() || bot.IsMessageToMe(*update.Message):
-		sendMsg(update)
+		return isMessage(update)
 	}
 	return nil
 }
 
-func sendMsg(update tgbotapi.Update) error {
-	text, err := search(update.Message.Text)
+func isCommand(update tgbotapi.Update) error {
+	return nil
+}
+
+func isMessage(update tgbotapi.Update) error {
+	txt, err := search(update.Message.Text)
 	if err != nil {
 		return err
 	}
+	return sendMsg(update, txt)
+}
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
+func sendMsg(update tgbotapi.Update, txt string) error {
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, txt)
 	msg.ParseMode = "HTML"
 	msg.DisableWebPagePreview = true
-	if _, err = bot.Send(msg); err != nil {
+	if _, err := bot.Send(msg); err != nil {
 		log.Println(err)
 		return err
 	}
