@@ -42,11 +42,11 @@ func botRun() error {
 
 func msgRouter(update tgbotapi.Update) error {
 	switch {
-	case update.Message.IsCommand():
-		return isCommand(update)
 	case update.InlineQuery != nil:
 		return isInline(update)
-	case update.Message.Chat.IsPrivate() || bot.IsMessageToMe(*update.Message):
+	case update.Message != nil && update.Message.IsCommand():
+		return isCommand(update)
+	case update.Message != nil && (update.Message.Chat.IsPrivate() || bot.IsMessageToMe(*update.Message)):
 		return isMessage(update)
 	}
 	return nil
