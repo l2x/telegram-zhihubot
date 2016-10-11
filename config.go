@@ -28,7 +28,8 @@ type Config struct {
 	}
 
 	Zhihu struct {
-		Host string
+		Host            string
+		SearchResultNum int `yaml:"search_result_num"`
 	}
 }
 
@@ -40,6 +41,9 @@ func initConfig(file string) error {
 	cfg = &Config{}
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
 		return err
+	}
+	if cfg.Zhihu.SearchResultNum == 0 {
+		cfg.Zhihu.SearchResultNum = 5
 	}
 	return nil
 }

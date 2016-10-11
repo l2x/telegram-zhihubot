@@ -19,7 +19,11 @@ func search(msg string) (string, error) {
 	}
 
 	msg = ""
-	doc.Find("ul.list li").Each(func(i int, s *goquery.Selection) {
+	doc.Find("ul.list li").EachWithBreak(func(i int, s *goquery.Selection) bool {
+		if i >= cfg.Zhihu.SearchResultNum {
+			return false
+		}
+
 		title := s.Find(".title").Text()
 		smy := s.Find(".content .summary")
 		smy.Find("a.toggle-expand").Remove()
@@ -29,11 +33,12 @@ func search(msg string) (string, error) {
 		questionLink, _ := s.Find("a").Attr("href")
 		answerLink, _ := s.Find(".entry-body .entry-content").Attr("data-entry-url")
 		if title == "" {
-			return
+			return true
 		}
 
 		msg = fmt.Sprintf(`%s<a href="%s/%s">%s</a><br>%s <a href="%s/%s">...显示全部</a><br><br>`,
 			msg, cfg.Zhihu.Host, questionLink, title, html.EscapeString(summary), cfg.Zhihu.Host, answerLink)
+		return true
 	})
 
 	msg = format(msg)
