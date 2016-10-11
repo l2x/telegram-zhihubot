@@ -99,7 +99,7 @@ func isInline(update tgbotapi.Update) error {
 	}
 	var answers []interface{}
 	for _, result := range results {
-		answer := tgbotapi.NewInlineQueryResultArticle(update.InlineQuery.ID, result.Title, result.Summary)
+		answer := tgbotapi.NewInlineQueryResultArticle(result.QuestionLink, result.Title, result.Summary)
 		answers = append(answers, &answer)
 	}
 	return answerInlineQuery(update, answers)
