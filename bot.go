@@ -129,6 +129,7 @@ func answerInlineQuery(update tgbotapi.Update, results []interface{}) error {
 		InlineQueryID: update.InlineQuery.ID,
 		IsPersonal:    true,
 		CacheTime:     0,
+		Results:       results,
 	}
 	if _, err := bot.AnswerInlineQuery(answer); err != nil {
 		log.Println(err)
