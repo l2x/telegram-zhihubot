@@ -85,7 +85,11 @@ func isMessage(update tgbotapi.Update) error {
 }
 
 func isDaily(update tgbotapi.Update) error {
-	return nil
+	txt, err := daily()
+	if err != nil {
+		return err
+	}
+	return sendMsg(update, txt)
 }
 
 func sendMsg(update tgbotapi.Update, txt string) error {

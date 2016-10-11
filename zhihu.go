@@ -11,7 +11,6 @@ import (
 )
 
 func search(msg string) (string, error) {
-	msg = strings.Trim(msg, " ")
 	uri := fmt.Sprintf("%s/search?type=content&q=%s", cfg.Zhihu.Host, url.QueryEscape(msg))
 	doc, err := goquery.NewDocument(uri)
 	if err != nil {
@@ -39,6 +38,10 @@ func search(msg string) (string, error) {
 
 	msg = format(msg)
 	return msg, nil
+}
+
+func daily() (string, error) {
+	return "", nil
 }
 
 var (
