@@ -41,14 +41,11 @@ func botRun() error {
 }
 
 func msgRouter(update tgbotapi.Update) error {
-	if update.Message == nil {
-		log.Println("message is nil", update)
-		return nil
-	}
-
 	switch {
 	case update.Message.IsCommand():
 		return isCommand(update)
+	case update.InlineQuery != nil:
+		return isInline(update)
 	case update.Message.Chat.IsPrivate() || bot.IsMessageToMe(*update.Message):
 		return isMessage(update)
 	}
@@ -82,6 +79,11 @@ func isMessage(update tgbotapi.Update) error {
 		return err
 	}
 	return sendMsg(update, txt)
+}
+
+func isInline(update tgbotapi.Update) error {
+	fmt.Println(update.InlineQuery)
+	return nil
 }
 
 func isDaily(update tgbotapi.Update) error {
