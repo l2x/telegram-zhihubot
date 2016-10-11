@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"html"
 	"log"
 	"net/url"
 	"strings"
@@ -10,15 +9,24 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func search(msg string) (string, error) {
+type SearchResult struct {
+	ID           string
+	Title        string
+	Summary      string
+	Content      string
+	QuestionLink string
+	AnswerLink   string
+}
+
+func search(msg string) ([]SearchResult, error) {
 	uri := fmt.Sprintf("%s/search?type=content&q=%s", cfg.Zhihu.Host, url.QueryEscape(msg))
 	doc, err := goquery.NewDocument(uri)
 	if err != nil {
 		log.Println(err)
-		return "", err
+		return nil, err
 	}
 
-	msg = ""
+	var results []SearchResult
 	doc.Find("ul.list li").EachWithBreak(func(i int, s *goquery.Selection) bool {
 		if i >= cfg.Zhihu.SearchResultNum {
 			return false
@@ -28,21 +36,28 @@ func search(msg string) (string, error) {
 		smy := s.Find(".content .summary")
 		smy.Find("a.toggle-expand").Remove()
 		summary := smy.Text()
-		// content := s.Find(".visible-expanded .content").Text()
+		content := s.Find(".visible-expanded .content").Text()
 
 		questionLink, _ := s.Find("a").Attr("href")
 		answerLink, _ := s.Find(".entry-body .entry-content").Attr("data-entry-url")
 		if title == "" {
 			return true
 		}
+		id := ""
+		result := SearchResult{
+			ID:           id,
+			Title:        title,
+			Summary:      summary,
+			Content:      content,
+			QuestionLink: questionLink,
+			AnswerLink:   answerLink,
+		}
+		results = append(results, result)
 
-		msg = fmt.Sprintf(`%s<a href="%s/%s">%s</a><br>%s <a href="%s/%s">...显示全部</a><br><br>`,
-			msg, cfg.Zhihu.Host, questionLink, title, html.EscapeString(summary), cfg.Zhihu.Host, answerLink)
 		return true
 	})
 
-	msg = format(msg)
-	return msg, nil
+	return results, nil
 }
 
 func daily() (string, error) {

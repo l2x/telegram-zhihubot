@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html"
 	"log"
 	"net/http"
 	"strings"
@@ -47,24 +48,15 @@ func msgRouter(update tgbotapi.Update) error {
 	case update.Message != nil && update.Message.IsCommand():
 		return isCommand(update)
 	case update.Message != nil && (update.Message.Chat.IsPrivate() || bot.IsMessageToMe(*update.Message)):
-		return isMessage(update)
+		return isSearch(update)
 	}
 	return nil
 }
 
 func isCommand(update tgbotapi.Update) error {
-	msg := strings.Trim(update.Message.CommandArguments(), " ")
-
 	switch update.Message.Command() {
 	case "s":
-		if msg == "" {
-			return sendMsg(update, HelpMsg)
-		}
-		txt, err := search(msg)
-		if err != nil {
-			return err
-		}
-		return sendMsg(update, txt)
+		return isSearch(update)
 	case "daily":
 		return isDaily(update)
 	default:
@@ -73,17 +65,44 @@ func isCommand(update tgbotapi.Update) error {
 	return nil
 }
 
-func isMessage(update tgbotapi.Update) error {
-	txt, err := search(update.Message.Text)
+func isSearch(update tgbotapi.Update) error {
+	var msg string
+	if update.Message.IsCommand() {
+		msg = update.Message.CommandArguments()
+	} else {
+		msg = update.Message.Text
+	}
+	msg = strings.Trim(msg, " ")
+	if msg == "" {
+		return sendMsg(update, HelpMsg)
+	}
+
+	results, err := search(update.Message.Text)
 	if err != nil {
 		return err
 	}
-	return sendMsg(update, txt)
+
+	msg = ""
+	for _, result := range results {
+		msg = fmt.Sprintf(`%s<a href="%s/%s">%s</a><br>%s <a href="%s/%s">...显示全部</a><br><br>`,
+			msg, cfg.Zhihu.Host, result.QuestionLink, result.Title, html.EscapeString(result.Summary), cfg.Zhihu.Host, result.AnswerLink)
+	}
+	msg = format(msg)
+	return sendMsg(update, msg)
 }
 
 func isInline(update tgbotapi.Update) error {
-	fmt.Println(update.InlineQuery)
-	return nil
+	msg := update.InlineQuery.Query
+	results, err := search(msg)
+	if err != nil {
+		return err
+	}
+	var answers []interface{}
+	for _, result := range results {
+		answer := tgbotapi.NewInlineQueryResultArticle(update.InlineQuery.ID, result.Title, result.Summary)
+		answers = append(answers, &answer)
+	}
+	return answerInlineQuery(update, answers)
 }
 
 func isDaily(update tgbotapi.Update) error {
@@ -102,6 +121,18 @@ func sendMsg(update tgbotapi.Update, txt string) error {
 		log.Println(err)
 		return err
 	}
+	return nil
+}
 
+func answerInlineQuery(update tgbotapi.Update, results []interface{}) error {
+	answer := tgbotapi.InlineConfig{
+		InlineQueryID: update.InlineQuery.ID,
+		IsPersonal:    true,
+		CacheTime:     0,
+	}
+	if _, err := bot.AnswerInlineQuery(answer); err != nil {
+		log.Println(err)
+		return err
+	}
 	return nil
 }
