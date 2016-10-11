@@ -11,6 +11,7 @@ import (
 )
 
 func search(msg string) (string, error) {
+	msg = strings.Trim(msg, " ")
 	uri := fmt.Sprintf("%s/search?type=content&q=%s", cfg.Zhihu.Host, url.QueryEscape(msg))
 	doc, err := goquery.NewDocument(uri)
 	if err != nil {

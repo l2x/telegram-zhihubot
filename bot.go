@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
@@ -55,13 +56,22 @@ func msgRouter(update tgbotapi.Update) error {
 }
 
 func isCommand(update tgbotapi.Update) error {
+	msg := strings.Trim(update.Message.CommandArguments(), " ")
+
 	switch update.Message.Command() {
 	case "s":
-		txt, err := search(update.Message.CommandArguments())
+		if msg == "" {
+			return sendMsg(update, HelpMsg)
+		}
+		txt, err := search(msg)
 		if err != nil {
 			return err
 		}
 		return sendMsg(update, txt)
+	case "daily":
+		return isDaily(update)
+	default:
+		return sendMsg(update, HelpMsg)
 	}
 	return nil
 }
@@ -72,6 +82,10 @@ func isMessage(update tgbotapi.Update) error {
 		return err
 	}
 	return sendMsg(update, txt)
+}
+
+func isDaily(update tgbotapi.Update) error {
+	return nil
 }
 
 func sendMsg(update tgbotapi.Update, txt string) error {

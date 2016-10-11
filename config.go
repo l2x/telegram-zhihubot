@@ -6,6 +6,12 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+var (
+	HelpMsg = `
+/s@zhihubot 关键字
+	`
+)
+
 var cfg *Config
 
 type Config struct {
