@@ -18,7 +18,7 @@ type SearchResult struct {
 	AnswerLink   string
 }
 
-func search(msg string) ([]SearchResult, error) {
+func search(msg string, limit int) ([]SearchResult, error) {
 	uri := fmt.Sprintf("%s/search?type=content&q=%s", cfg.Zhihu.Host, url.QueryEscape(msg))
 	doc, err := goquery.NewDocument(uri)
 	if err != nil {
@@ -28,7 +28,7 @@ func search(msg string) ([]SearchResult, error) {
 
 	var results []SearchResult
 	doc.Find("ul.list li").EachWithBreak(func(i int, s *goquery.Selection) bool {
-		if i >= cfg.Zhihu.SearchResultNum {
+		if i >= limit {
 			return false
 		}
 

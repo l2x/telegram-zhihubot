@@ -12,3 +12,4 @@ http:
 zhihu:
     host: https://www.zhihu.com
     search_result_num: 5
+    inline_result_num: 10

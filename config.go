@@ -30,6 +30,7 @@ type Config struct {
 	Zhihu struct {
 		Host            string
 		SearchResultNum int `yaml:"search_result_num"`
+		InlineResultNum int `yaml:"inline_result_num"`
 	}
 }
 
@@ -44,6 +45,9 @@ func initConfig(file string) error {
 	}
 	if cfg.Zhihu.SearchResultNum == 0 {
 		cfg.Zhihu.SearchResultNum = 5
+	}
+	if cfg.Zhihu.InlineResultNum == 0 {
+		cfg.Zhihu.InlineResultNum = 10
 	}
 	return nil
 }

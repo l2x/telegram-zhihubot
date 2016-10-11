@@ -77,7 +77,7 @@ func isSearch(update tgbotapi.Update) error {
 		return sendMsg(update, HelpMsg)
 	}
 
-	results, err := search(update.Message.Text)
+	results, err := search(update.Message.Text, cfg.Zhihu.SearchResultNum)
 	if err != nil {
 		return err
 	}
@@ -93,13 +93,13 @@ func isSearch(update tgbotapi.Update) error {
 
 func isInline(update tgbotapi.Update) error {
 	msg := update.InlineQuery.Query
-	results, err := search(msg)
+	results, err := search(msg, cfg.Zhihu.InlineResultNum)
 	if err != nil {
 		return err
 	}
 	var answers []interface{}
 	for _, result := range results {
-		answer := tgbotapi.NewInlineQueryResultArticle(result.QuestionLink, result.Title, result.Summary)
+		answer := tgbotapi.NewInlineQueryResultArticle(result.QuestionLink, result.Title, result.Content)
 		answers = append(answers, &answer)
 	}
 	return answerInlineQuery(update, answers)
