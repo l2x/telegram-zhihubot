@@ -55,6 +55,14 @@ func msgRouter(update tgbotapi.Update) error {
 }
 
 func isCommand(update tgbotapi.Update) error {
+	switch update.Message.Command() {
+	case "s":
+		txt, err := search(update.Message.CommandArguments())
+		if err != nil {
+			return err
+		}
+		return sendMsg(update, txt)
+	}
 	return nil
 }
 
