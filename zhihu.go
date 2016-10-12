@@ -40,9 +40,16 @@ func search(msg string, limit int) ([]SearchResult, error) {
 
 		questionLink, _ := s.Find("a").Attr("href")
 		answerLink, _ := s.Find(".entry-body .entry-content").Attr("data-entry-url")
+		if !strings.HasPrefix(questionLink, "http") {
+			questionLink = fmt.Sprintf("%s/%s", cfg.Zhihu.Host, strings.TrimLeft(questionLink, "/"))
+		}
+		if !strings.HasPrefix(answerLink, "http") {
+			answerLink = fmt.Sprintf("%s/%s", cfg.Zhihu.Host, strings.TrimLeft(answerLink, "/"))
+		}
 		if title == "" {
 			return true
 		}
+
 		id := ""
 		result := SearchResult{
 			ID:           id,

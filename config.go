@@ -2,6 +2,7 @@ package main
 
 import (
 	"io/ioutil"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -49,5 +50,6 @@ func initConfig(file string) error {
 	if cfg.Zhihu.InlineResultNum == 0 {
 		cfg.Zhihu.InlineResultNum = 10
 	}
+	cfg.Zhihu.Host = strings.TrimRight(cfg.Zhihu.Host, "/")
 	return nil
 }

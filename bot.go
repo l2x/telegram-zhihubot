@@ -84,8 +84,8 @@ func isSearch(update tgbotapi.Update) error {
 
 	msg = ""
 	for _, result := range results {
-		msg = fmt.Sprintf(`%s<a href="%s/%s">%s</a><br>%s <a href="%s/%s">...显示全部</a><br><br>`,
-			msg, cfg.Zhihu.Host, result.QuestionLink, result.Title, html.EscapeString(result.Summary), cfg.Zhihu.Host, result.AnswerLink)
+		msg = fmt.Sprintf(`%s<a href="%s">%s</a><br>%s <a href="%s">...显示全部</a><br><br>`,
+			msg, result.QuestionLink, result.Title, html.EscapeString(result.Summary), result.AnswerLink)
 	}
 	msg = format(msg)
 	return sendMsg(update, msg)
@@ -99,8 +99,8 @@ func isInline(update tgbotapi.Update) error {
 	}
 	var answers []interface{}
 	for _, result := range results {
-		msg = fmt.Sprintf(`<a href="%s/%s">%s</a><br>%s <br><a href="%s/%s">查看原文</a><br>`,
-			cfg.Zhihu.Host, result.QuestionLink, result.Title, html.EscapeString(result.Content), cfg.Zhihu.Host, result.AnswerLink)
+		msg = fmt.Sprintf(`<a href="%s">%s</a><br>%s <br><a href="%s">查看原文</a><br>`,
+			result.QuestionLink, result.Title, html.EscapeString(result.Summary), result.AnswerLink)
 		msg = format(msg)
 		answer := tgbotapi.NewInlineQueryResultArticleHTML(result.QuestionLink, result.Title, msg)
 		inputTextMessageContent := answer.InputMessageContent.(tgbotapi.InputTextMessageContent)
