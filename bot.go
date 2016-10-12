@@ -100,8 +100,8 @@ func isInline(update tgbotapi.Update) error {
 	var answers []interface{}
 	for _, result := range results {
 		content := html.EscapeString(result.Content)
-		if len(content) > 3500 {
-			content = Substr(content, 3500)
+		if len(content) > 2000 {
+			content = Substr(content, 2000)
 		}
 		msg = fmt.Sprintf(`<a href="%s">%s</a><br>%s <a href="%s">...显示全部</a><br><br>`,
 			result.QuestionLink, result.Title, content, result.AnswerLink)
