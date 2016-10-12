@@ -91,7 +91,6 @@ func format(msg string) string {
 
 	re := regexp.MustCompile("<(/?)[a-zA-Z+]>")
 	msg = re.ReplaceAllString(msg, "")
-
 	return msg
 }
 

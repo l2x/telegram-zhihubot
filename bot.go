@@ -87,7 +87,6 @@ func isSearch(update tgbotapi.Update) error {
 		msg = fmt.Sprintf(`%s<a href="%s">%s</a>%s %s <a href="%s">...显示全部</a>%s`,
 			msg, result.QuestionLink, result.Title, Warp, result.Summary, result.AnswerLink, Warp)
 	}
-	msg = format(msg)
 	return sendMsg(update, msg)
 }
 
@@ -105,7 +104,6 @@ func isInline(update tgbotapi.Update) error {
 		}
 		msg = fmt.Sprintf(`<a href="%s">%s</a>%s %s <a href="%s">...显示全部</a>%s`,
 			result.QuestionLink, result.Title, Warp, content, result.AnswerLink, Warp)
-		msg = format(msg)
 		answer := tgbotapi.NewInlineQueryResultArticleHTML(result.ID, result.Title, msg)
 		answer.Description = html.EscapeString(result.Summary)
 		inputTextMessageContent := answer.InputMessageContent.(tgbotapi.InputTextMessageContent)
