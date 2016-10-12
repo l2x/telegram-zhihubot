@@ -88,3 +88,23 @@ func format(msg string) string {
 	}
 	return msg
 }
+
+func Substr(s string, size int) string {
+	if len(s) < size {
+		return s
+	}
+	var k, i int
+	chars := []rune(s)
+	for _, c := range chars {
+		if c > 254 {
+			i += 3
+		} else {
+			i++
+		}
+		if i > size {
+			break
+		}
+		k++
+	}
+	return string(chars[0:k])
+}

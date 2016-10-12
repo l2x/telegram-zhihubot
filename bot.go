@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"strings"
 
-	"golang.org/x/exp/utf8string"
-
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
@@ -103,7 +101,7 @@ func isInline(update tgbotapi.Update) error {
 	for _, result := range results {
 		content := html.EscapeString(result.Content)
 		if len(content) > 3500 {
-			content = utf8string.NewString(content).Slice(0, 3500)
+			content = Substr(content, 3500)
 		}
 		msg = fmt.Sprintf(`<a href="%s">%s</a><br>%s <a href="%s">...显示全部</a><br><br>`,
 			result.QuestionLink, result.Title, content, result.AnswerLink)
