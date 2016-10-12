@@ -84,8 +84,8 @@ func isSearch(update tgbotapi.Update) error {
 
 	msg = ""
 	for _, result := range results {
-		msg = fmt.Sprintf(`%s<a href="%s">%s</a>%s %s <a href="%s">...显示全部</a>%s`,
-			msg, result.QuestionLink, result.Title, Warp, result.Summary, result.AnswerLink, Warp)
+		msg = fmt.Sprintf(`%s<a href="%s">%s</a>%s%s <a href="%s">...显示全部</a>%s%s`,
+			msg, result.QuestionLink, result.Title, Warp, result.Summary, result.AnswerLink, Warp, Warp)
 	}
 	return sendMsg(update, msg)
 }
@@ -102,8 +102,8 @@ func isInline(update tgbotapi.Update) error {
 		if len(content) > 2000 {
 			content = Substr(content, 2000)
 		}
-		msg = fmt.Sprintf(`<a href="%s">%s</a>%s %s <a href="%s">...显示全部</a>%s`,
-			result.QuestionLink, result.Title, Warp, content, result.AnswerLink, Warp)
+		msg = fmt.Sprintf(`<a href="%s">%s</a>%s%s <a href="%s">...显示全部</a>%s%s`,
+			result.QuestionLink, result.Title, Warp, content, result.AnswerLink, Warp, Warp)
 		answer := tgbotapi.NewInlineQueryResultArticleHTML(result.ID, result.Title, msg)
 		answer.Description = html.EscapeString(result.Summary)
 		inputTextMessageContent := answer.InputMessageContent.(tgbotapi.InputTextMessageContent)
