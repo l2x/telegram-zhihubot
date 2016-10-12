@@ -16,12 +16,12 @@ func botRun() error {
 	var err error
 	bot, err = tgbotapi.NewBotAPI(cfg.Bot.Token)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 
 	bot.Debug = cfg.Bot.Debug
 
-	log.Printf("Authorized on account %s", bot.Self.UserName)
+	log.Println("Authorized on account:", bot.Self.UserName)
 
 	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert(fmt.Sprintf("%s%s/%s", cfg.HTTP.Host, cfg.HTTP.Port, cfg.Bot.Token), cfg.HTTP.PublicKey))
 	if err != nil {
@@ -31,7 +31,7 @@ func botRun() error {
 	updates := bot.ListenForWebhook(fmt.Sprintf("/%s", bot.Token))
 	go func() {
 		if err := http.ListenAndServeTLS(cfg.HTTP.Port, cfg.HTTP.PublicKey, cfg.HTTP.PrivateKey, nil); err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 	}()
 
@@ -118,7 +118,7 @@ func sendMsg(update tgbotapi.Update, txt string) error {
 	msg.ParseMode = "HTML"
 	msg.DisableWebPagePreview = true
 	if _, err := bot.Send(msg); err != nil {
-		log.Println(err)
+		log.Println("bot.Send:", err)
 		return err
 	}
 	return nil
@@ -132,7 +132,7 @@ func answerInlineQuery(update tgbotapi.Update, results []interface{}) error {
 		Results:       results,
 	}
 	if _, err := bot.AnswerInlineQuery(answer); err != nil {
-		log.Println(err)
+		log.Println("bot.answerInlineQuery:", err)
 		return err
 	}
 	return nil
