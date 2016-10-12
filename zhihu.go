@@ -37,9 +37,11 @@ func search(msg string, limit int) ([]SearchResult, error) {
 		title := s.Find(".title").Text()
 		smy := s.Find(".content .summary")
 		smy.Find("a.toggle-expand").Remove()
-		summary := format(smy.Text())
-		content := format(s.Find(".visible-expanded .content").Text())
+		summary := smy.Text()
+		content := s.Find(".visible-expanded .content").Text()
 
+		summary = format(summary)
+		content = format(content)
 		questionLink, _ := s.Find("a").Attr("href")
 		answerLink, _ := s.Find(".entry-body .entry-content").Attr("data-entry-url")
 		tmp := strings.Split(answerLink, "/")
