@@ -101,6 +101,7 @@ func isInline(update tgbotapi.Update) error {
 	for _, result := range results {
 		msg = fmt.Sprintf(`<a href="%s/%s">%s</a><br>%s <br><a href="%s/%s">查看原文</a><br>`,
 			cfg.Zhihu.Host, result.QuestionLink, result.Title, html.EscapeString(result.Summary), cfg.Zhihu.Host, result.AnswerLink)
+		msg = format(msg)
 		answer := tgbotapi.NewInlineQueryResultArticleHTML(result.QuestionLink, result.Title, msg)
 		answers = append(answers, &answer)
 	}
