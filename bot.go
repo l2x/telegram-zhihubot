@@ -136,8 +136,7 @@ func sendMsg(update tgbotapi.Update, txt string) error {
 func answerInlineQuery(update tgbotapi.Update, results []interface{}) error {
 	answer := tgbotapi.InlineConfig{
 		InlineQueryID: update.InlineQuery.ID,
-		IsPersonal:    true,
-		CacheTime:     0,
+		CacheTime:     3600,
 		Results:       results,
 	}
 	if resp, err := bot.AnswerInlineQuery(answer); err != nil {
