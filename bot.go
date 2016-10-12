@@ -99,10 +99,10 @@ func isInline(update tgbotapi.Update) error {
 	}
 	var answers []interface{}
 	for _, result := range results {
-		msg = fmt.Sprintf(`<a href="%s">%s</a><br>%s <br><a href="%s">查看原文</a><br>`,
+		msg = fmt.Sprintf(`<a href="%s">%s</a><br>%s <a href="%s">...显示全部</a><br><br>`,
 			result.QuestionLink, result.Title, html.EscapeString(result.Summary), result.AnswerLink)
 		msg = format(msg)
-		answer := tgbotapi.NewInlineQueryResultArticleHTML(result.QuestionLink, result.Title, msg)
+		answer := tgbotapi.NewInlineQueryResultArticleHTML(result.ID, result.Title, msg)
 		inputTextMessageContent := answer.InputMessageContent.(tgbotapi.InputTextMessageContent)
 		inputTextMessageContent.DisableWebPagePreview = true
 		answer.InputMessageContent = inputTextMessageContent
