@@ -99,7 +99,9 @@ func isInline(update tgbotapi.Update) error {
 	}
 	var answers []interface{}
 	for _, result := range results {
-		answer := tgbotapi.NewInlineQueryResultArticle(result.QuestionLink, result.Title, result.Summary)
+		msg = fmt.Sprintf(`<a href="%s/%s">%s</a><br>%s <br><a href="%s/%s">查看原文</a><br>`,
+			cfg.Zhihu.Host, result.QuestionLink, result.Title, html.EscapeString(result.Summary), cfg.Zhihu.Host, result.AnswerLink)
+		answer := tgbotapi.NewInlineQueryResultArticleHTML(result.QuestionLink, result.Title, msg)
 		answers = append(answers, &answer)
 	}
 	return answerInlineQuery(update, answers)
