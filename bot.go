@@ -123,8 +123,8 @@ func sendMsg(update tgbotapi.Update, txt string) error {
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, txt)
 	msg.ParseMode = "HTML"
 	msg.DisableWebPagePreview = true
-	if _, err := bot.Send(msg); err != nil {
-		log.Println("bot.Send:", err)
+	if resp, err := bot.Send(msg); err != nil {
+		log.Println("bot.Send:", err, resp)
 		return err
 	}
 	return nil
@@ -137,8 +137,8 @@ func answerInlineQuery(update tgbotapi.Update, results []interface{}) error {
 		CacheTime:     0,
 		Results:       results,
 	}
-	if _, err := bot.AnswerInlineQuery(answer); err != nil {
-		log.Println("bot.answerInlineQuery:", err)
+	if resp, err := bot.AnswerInlineQuery(answer); err != nil {
+		log.Println("bot.answerInlineQuery:", err, resp)
 		return err
 	}
 	return nil
