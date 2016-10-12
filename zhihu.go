@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"html"
 	"log"
 	"net/url"
+	"regexp"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -35,8 +37,8 @@ func search(msg string, limit int) ([]SearchResult, error) {
 		title := s.Find(".title").Text()
 		smy := s.Find(".content .summary")
 		smy.Find("a.toggle-expand").Remove()
-		summary := smy.Text()
-		content := s.Find(".visible-expanded .content").Text()
+		summary := format(smy.Text())
+		content := format(s.Find(".visible-expanded .content").Text())
 
 		questionLink, _ := s.Find("a").Attr("href")
 		answerLink, _ := s.Find(".entry-body .entry-content").Attr("data-entry-url")
@@ -56,8 +58,8 @@ func search(msg string, limit int) ([]SearchResult, error) {
 		result := SearchResult{
 			ID:           id,
 			Title:        title,
-			Summary:      summary,
-			Content:      content,
+			Summary:      html.EscapeString(summary),
+			Content:      html.EscapeString(content),
 			QuestionLink: questionLink,
 			AnswerLink:   answerLink,
 		}
@@ -77,20 +79,8 @@ var (
 	Warp = `
 	`
 	ReplaceHTML = map[string]string{
-		"<br>":            Warp,
-		"&lt;br&gt;":      Warp,
-		"&lt;b&gt;":       "<b>",
-		"&lt;/b&gt;":      "</b>",
-		"&lt;strong&gt;":  "<strong>",
-		"&lt;/strong&gt;": "</strong>",
-		"&lt;i&gt;":       "<i>",
-		"&lt;/i&gt;":      "</i>",
-		"&lt;em&gt;":      "<em>",
-		"&lt;/em&gt;":     "</em>",
-		"&lt;code&gt;":    "<code>",
-		"&lt;/code&gt;":   "</code>",
-		"&lt;pre&gt;":     "<pre>",
-		"&lt;/pre&gt;":    "</pre>",
+		"<br>":       Warp,
+		"&lt;br&gt;": Warp,
 	}
 )
 
@@ -98,6 +88,10 @@ func format(msg string) string {
 	for k, v := range ReplaceHTML {
 		msg = strings.Replace(msg, k, v, -1)
 	}
+
+	re := regexp.MustCompile("<(/?)[a-zA-Z+]>")
+	msg = re.ReplaceAllString(msg, "")
+
 	return msg
 }
 
