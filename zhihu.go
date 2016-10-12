@@ -77,8 +77,20 @@ var (
 	Warp = `
 	`
 	ReplaceHTML = map[string]string{
-		"<br>":       Warp,
-		"&lt;br&gt;": Warp,
+		"<br>":            Warp,
+		"&lt;br&gt;":      Warp,
+		"&lt;b&gt;":       "<b>",
+		"&lt;/b&gt;":      "</b>",
+		"&lt;strong&gt;":  "<strong>",
+		"&lt;/strong&gt;": "</strong>",
+		"&lt;i&gt;":       "<i>",
+		"&lt;/i&gt;":      "</i>",
+		"&lt;em&gt;":      "<em>",
+		"&lt;/em&gt;":     "</em>",
+		"&lt;code&gt;":    "<code>",
+		"&lt;/code&gt;":   "</code>",
+		"&lt;pre&gt;":     "<pre>",
+		"&lt;/pre&gt;":    "</pre>",
 	}
 )
 
