@@ -106,7 +106,7 @@ func isInline(update tgbotapi.Update) error {
 		msg = fmt.Sprintf(`<a href="%s">%s</a><br>%s <a href="%s">...显示全部</a><br><br>`,
 			result.QuestionLink, result.Title, content, result.AnswerLink)
 		msg = format(msg)
-		answer := tgbotapi.NewInlineQueryResultArticleHTML(result.ID, result.Title, msg)
+		answer := tgbotapi.NewInlineQueryResultArticleHTML(update.InlineQuery.ID, result.Title, msg)
 		answer.Description = html.EscapeString(result.Summary)
 		inputTextMessageContent := answer.InputMessageContent.(tgbotapi.InputTextMessageContent)
 		inputTextMessageContent.DisableWebPagePreview = true
