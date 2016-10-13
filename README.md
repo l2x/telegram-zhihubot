@@ -3,4 +3,4 @@ telegram zhihubot source code
 
 ### TODO 
 
- - inline mode
+ - 知乎日报
