@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 var bot *tgbotapi.BotAPI
