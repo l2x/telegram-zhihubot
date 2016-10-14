@@ -6,8 +6,6 @@ import (
 	"log"
 	"net/http"
 	"strings"
-
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 var bot *tgbotapi.BotAPI
@@ -49,6 +47,8 @@ func msgRouter(update tgbotapi.Update) error {
 		return isCommand(update)
 	case update.Message != nil && (update.Message.Chat.IsPrivate() || bot.IsMessageToMe(*update.Message)):
 		return isSearch(update)
+	default:
+		log.Printf("unsupport message:%#v\n", update)
 	}
 	return nil
 }
