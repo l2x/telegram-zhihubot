@@ -77,7 +77,7 @@ func isSearch(update tgbotapi.Update) error {
 		return sendMsg(update, HelpMsg)
 	}
 
-	results, err := search(update.Message.Text, cfg.Zhihu.SearchResultNum)
+	results, err := search(msg, cfg.Zhihu.SearchResultNum)
 	if err != nil {
 		return err
 	}
